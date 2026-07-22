@@ -10,8 +10,9 @@ def get_transcript():
         return jsonify({"error": "Missing videoId parameter"}), 400
 
     try:
-        transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
-        full_text = " ".join([item["text"] for item in transcript_list])
+        ytt_api = YouTubeTranscriptApi()
+        fetched_transcript = ytt_api.fetch(video_id)
+        full_text = " ".join([snippet.text for snippet in fetched_transcript])
         return jsonify({"videoId": video_id, "transcript": full_text})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
